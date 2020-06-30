@@ -20,7 +20,7 @@ namespace ArithmeticExpressions
             StringListValue = stringListValue;
             Operation = operation;
             IsLeaf = isLeaf;
-            ContainsVariable = containsVariable;
+            IsVariable = containsVariable;
 
             if (stringListValue.Count == 1 && Int32.TryParse(stringListValue[0], out Int32 result))
             {
@@ -40,9 +40,9 @@ namespace ArithmeticExpressions
         public Boolean IsNumber => NumberValue != null;
         public Boolean IsLeaf { get; set; }
 
-        public Boolean ContainsVariable { get; private set; }
+        public Boolean IsVariable { get; set; }
 
         public Int32? NumberValue { get; set; }
-        public List<String> StringListValue { get; private set; }
+        public List<String> StringListValue { get; set; }
     }
 }

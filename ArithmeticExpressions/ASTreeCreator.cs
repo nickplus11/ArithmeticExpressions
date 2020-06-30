@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace ArithmeticExpressions
 {
@@ -19,14 +20,16 @@ namespace ArithmeticExpressions
             Root = new ASTreeNode(InputStringList, Operations.NotDefined);
         }
 
-        public void GetResult(List<String> tokens)
+        public void BuildASTree()
         {
-            useGrammarTerm(tokens, Root);
+            useGrammarTerm(InputStringList, Root);
         }
 
         private void useGrammarTerm(List<String> tokens, ASTreeNode node)
         {
             if (InputStringList.Count == 0) throw new UnacceptableExpressionException("Empty expression");
+            Boolean readyToUse = !canBeSimlified(tokens);
+            while (!readyToUse) readyToUse = !canBeSimlified(tokens);
             useGrammarAdd(tokens, node);
         }
 
@@ -112,6 +115,8 @@ namespace ArithmeticExpressions
 
             if (rightPart.Count == 0)
             {
+                Boolean readyToUse = !canBeSimlified(tokens);
+                while (!readyToUse) readyToUse = !canBeSimlified(tokens);
                 useGrammarMult(tokens, node);
             }
             else
@@ -120,7 +125,12 @@ namespace ArithmeticExpressions
                 node.LeftChild = new ASTreeNode(leftPart, Operations.NotDefined);
                 node.RightChild = new ASTreeNode(rightPart, Operations.NotDefined);
 
+                Boolean readyToUse = !canBeSimlified(leftPart);
+                while (!readyToUse) readyToUse = !canBeSimlified(leftPart);
                 useGrammarAdd(leftPart, node.LeftChild);
+
+                readyToUse = !canBeSimlified(rightPart);
+                while (!readyToUse) readyToUse = !canBeSimlified(rightPart);
                 useGrammarAdd(rightPart, node.RightChild);
             }
         }
@@ -199,6 +209,8 @@ namespace ArithmeticExpressions
 
             if (rightPart.Count == 0)
             {
+                Boolean readyToUse = !canBeSimlified(tokens);
+                while (!readyToUse) readyToUse = !canBeSimlified(tokens);
                 useGrammarNumber(tokens, node);
             }
             else
@@ -217,14 +229,36 @@ namespace ArithmeticExpressions
             if (tokens.Count > 1) throw new UnacceptableExpressionException("Expected a single token");
             if (Int32.TryParse(tokens[0], out Int32 result))
             {
-                node = new ASTreeNode(new List<String>() {result.ToString()},
-                    Operations.NotDefined, true) {NumberValue = result};
+                node.IsLeaf = true;
+                node.NumberValue = result;
+                node.Operation = Operations.NotDefined;
+                node.StringListValue = new List<String>() {result.ToString()};
             }
             else
             {
-                node = new ASTreeNode(new List<String>() {result.ToString()},
-                    Operations.NotDefined, true, true);
+                node.IsLeaf = true;
+                node.IsVariable = true;
+                node.Operation = Operations.NotDefined;
             }
+        }
+
+        private Boolean canBeSimlified(List<String> input)
+        {
+            if (input == null
+                || !(input[0] == "(" && input[^1] == ")")
+            ) return false;
+
+            UInt16 countOpened = 0;
+            for (int i = 0; i < input.Count; ++i)
+            {
+                if (input[i] == "(") ++countOpened;
+                if (input[i] == ")") --countOpened;
+                if (countOpened == 0 && i != input.Count - 1) return false;
+            }
+
+            input.RemoveAt(0);
+            input.RemoveAt(input.Count-1);
+            return true;
         }
     }
 }
