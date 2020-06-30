@@ -219,7 +219,12 @@ namespace ArithmeticExpressions
                 node.LeftChild = new ASTreeNode(leftPart, Operations.NotDefined);
                 node.RightChild = new ASTreeNode(rightPart, Operations.NotDefined);
 
+                Boolean readyToUse = !canBeSimlified(leftPart);
+                while (!readyToUse) readyToUse = !canBeSimlified(leftPart);
                 useGrammarAdd(leftPart, node.LeftChild);
+
+                readyToUse = !canBeSimlified(rightPart);
+                while (!readyToUse) readyToUse = !canBeSimlified(rightPart);
                 useGrammarAdd(rightPart, node.RightChild);
             }
         }
@@ -257,7 +262,7 @@ namespace ArithmeticExpressions
             }
 
             input.RemoveAt(0);
-            input.RemoveAt(input.Count-1);
+            input.RemoveAt(input.Count - 1);
             return true;
         }
     }
