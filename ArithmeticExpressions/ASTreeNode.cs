@@ -1,13 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 
+public enum Operations
+{
+    Add,
+    Subtract,
+    Divide,
+    Multiply,
+    NotDefined
+}
+
 namespace ArithmeticExpressions
 {
     public class ASTreeNode
     {
-        public ASTreeNode(List<String> stringListValue)
+        public ASTreeNode(List<String> stringListValue, Operations operation,
+            Boolean isLeaf = false, Boolean containsVariable = false)
         {
             StringListValue = stringListValue;
+            Operation = operation;
+            IsLeaf = isLeaf;
+            ContainsVariable = containsVariable;
 
             if (stringListValue.Count == 1 && Int32.TryParse(stringListValue[0], out Int32 result))
             {
@@ -23,22 +36,13 @@ namespace ArithmeticExpressions
             '+', '-', '*', '/', '(', ')'
         };
 
+        public Operations Operation { get; set; }
         public Boolean IsNumber => NumberValue != null;
+        public Boolean IsLeaf { get; set; }
 
-        public Boolean ContainsVariable()
-        {
-            foreach (var token in StringListValue)
-            {
-                if (token.Length > 1
-                    && !Int32.TryParse(token, out Int32 result)
-                    || !TerminalSymbols.Contains(token[0])
-                ) return true;
-            }
+        public Boolean ContainsVariable { get; private set; }
 
-            return false;
-        }
-
-        public Int32? NumberValue { get; private set; }
+        public Int32? NumberValue { get; set; }
         public List<String> StringListValue { get; private set; }
     }
 }
