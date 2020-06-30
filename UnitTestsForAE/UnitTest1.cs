@@ -11,7 +11,7 @@ namespace UnitTestsForAE
     [TestClass]
     public class ParserTests
     {
-        [TestMethod]
+        [TestMethod] 
         public void TestMethodParser1()
         {
             // Arrange
