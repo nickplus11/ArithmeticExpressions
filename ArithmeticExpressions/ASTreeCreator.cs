@@ -37,28 +37,28 @@ namespace ArithmeticExpressions
         {
             var leftPart = new List<string>();
             var rightPart = new List<string>();
-            UInt16 index = 0;
+            Int32 index = tokens.Count - 1;
             Operations operation = Operations.NotDefined;
 
-            while (index < tokens.Count)
+            while (index >= 0)
             {
-
-                UInt16 openBrackets = 0;
-                if (tokens[index] == "(")
+                UInt16 closedBrackets = 0;
+                if (tokens[index] == ")")
                 {
-                    ++openBrackets;
-                    leftPart.Add(tokens[index]);
-                    ++index;
-                    
-                    while (openBrackets > 0)
+                    ++closedBrackets;
+                    rightPart.Add(tokens[index]);
+                    --index;
+
+                    while (closedBrackets > 0)
                     {
-                        if(index >= tokens.Count) throw new UnacceptableExpressionException("Not closed brackets");
-                        if (tokens[index] == "(") ++openBrackets;
-                        if (tokens[index] == ")") --openBrackets;
-                        
-                        leftPart.Add(tokens[index]);
-                        ++index;
+                        if (index < 0) throw new UnacceptableExpressionException("Not closed brackets");
+                        if (tokens[index] == "(") --closedBrackets;
+                        if (tokens[index] == ")") ++closedBrackets;
+
+                        rightPart.Add(tokens[index]);
+                        --index;
                     }
+
                     continue;
                 }
 
@@ -76,15 +76,15 @@ namespace ArithmeticExpressions
                             throw new UnacceptableExpressionException("Undefined operation");
                     }
 
-                    rightPart = tokens.GetRange(index + 1, tokens.Count - index - 1);
+                    leftPart = tokens.GetRange(0, index);
                     break;
                 }
 
-                leftPart.Add(tokens[index]);
-                ++index;
+                rightPart.Add(tokens[index]);
+                --index;
             }
 
-            if (rightPart.Count == 0)
+            if (leftPart.Count == 0)
             {
                 Boolean readyToUse = !canBeSimlified(tokens);
                 while (!readyToUse) readyToUse = !canBeSimlified(tokens);
@@ -92,6 +92,9 @@ namespace ArithmeticExpressions
             }
             else
             {
+                //leftPart.Reverse();
+                rightPart.Reverse();
+
                 node.Operation = operation;
                 node.LeftChild = new ASTreeNode(leftPart, Operations.NotDefined);
                 node.RightChild = new ASTreeNode(rightPart, Operations.NotDefined);
@@ -110,30 +113,30 @@ namespace ArithmeticExpressions
         {
             var leftPart = new List<string>();
             var rightPart = new List<string>();
-            UInt16 index = 0;
+            Int32 index = tokens.Count - 1;
             Operations operation = Operations.NotDefined;
 
-            while (index < tokens.Count)
+            while (index >= 0)
             {
-                UInt16 stepIndex = index;
-                UInt16 openBrackets = 0;
-                if (tokens[index] == "(")
+                UInt16 closedBrackets = 0;
+                if (tokens[index] == ")")
                 {
-                    ++openBrackets;
-                    ++index;
-                    while (openBrackets > 0)
-                    {
-                        if (tokens[index] == "(") ++openBrackets;
+                    ++closedBrackets;
+                    rightPart.Add(tokens[index]);
+                    --index;
 
-                        leftPart.Add(tokens[index]);
-                        ++index;
-                        if (index >= tokens.Count)
-                            throw new UnacceptableExpressionException("Absence of a closing bracket");
-                        if (tokens[index] == ")") --openBrackets;
+                    while (closedBrackets > 0)
+                    {
+                        if (index < 0) throw new UnacceptableExpressionException("Not closed brackets");
+                        if (tokens[index] == "(") --closedBrackets;
+                        if (tokens[index] == ")") ++closedBrackets;
+
+                        rightPart.Add(tokens[index]);
+                        --index;
                     }
 
-                    ++index;
-                    if (index >= tokens.Count) break;
+                    // --index;
+                    // if (index < 0) break;
 
                     if (!(tokens[index] == "*" || tokens[index] == "/"))
                         throw new UnacceptableExpressionException("Undefined operation");
@@ -150,7 +153,7 @@ namespace ArithmeticExpressions
                             throw new UnacceptableExpressionException("Undefined operation");
                     }
 
-                    rightPart = tokens.GetRange(index + 1, tokens.Count - index - 1);
+                    leftPart = tokens.GetRange(0, index);
                     break;
                 }
                 else
@@ -169,16 +172,16 @@ namespace ArithmeticExpressions
                                 throw new UnacceptableExpressionException("Undefined operation");
                         }
 
-                        rightPart = tokens.GetRange(index + 1, tokens.Count - index - 1);
+                        leftPart = tokens.GetRange(0, index);
                         break;
                     }
 
-                    leftPart.Add(tokens[index]);
-                    ++index;
+                    rightPart.Add(tokens[index]);
+                    --index;
                 }
             }
 
-            if (rightPart.Count == 0)
+            if (leftPart.Count == 0)
             {
                 Boolean readyToUse = !canBeSimlified(tokens);
                 while (!readyToUse) readyToUse = !canBeSimlified(tokens);
@@ -186,6 +189,9 @@ namespace ArithmeticExpressions
             }
             else
             {
+                //leftPart.Reverse();
+                rightPart.Reverse();
+                
                 node.Operation = operation;
                 node.LeftChild = new ASTreeNode(leftPart, Operations.NotDefined);
                 node.RightChild = new ASTreeNode(rightPart, Operations.NotDefined);

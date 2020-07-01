@@ -8,7 +8,7 @@ namespace ArithmeticExpressions
         static void Main(string[] args)
         {
             //String expression = "ENTER_THE_EXPRESSION";
-            String expression = "(x + (10 + 10 / 10)) * 2";
+            String expression = "(a * (10 + 5)) / ((2 + 2) * 3) + b * (3 + 5) + 2 * 2";
             var tokens = Parser.Parse(expression);
             var asTreeCreator = new ASTreeCreator(tokens);
             asTreeCreator.BuildASTree();

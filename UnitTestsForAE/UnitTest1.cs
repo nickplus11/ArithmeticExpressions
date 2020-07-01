@@ -93,7 +93,7 @@ namespace UnitTestsForAE
         {
             // Arrange
             const String inputString = "Y * 10 * 2 / 4 * ( 1 + 2 + ( 3 + 3 ) + 1 ) - X";
-            var expected = "Y * 50 - X";
+            var expected = "Y * 50 - X";                                                     // TO FIX 
 
             // Act
             var cr = new ASTreeCreator(Parser.Parse(inputString));
