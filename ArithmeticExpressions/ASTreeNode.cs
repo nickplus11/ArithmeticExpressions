@@ -125,6 +125,15 @@ namespace ArithmeticExpressions
                 var rightResult = RightChild.Calculate();
                 var finalResult = new List<String>();
 
+                if (Operation == Operations.Add || Operation == Operations.Subtract)
+                {
+                    Boolean readyToUse = !canBeSimlified(leftResult);
+                    while (!readyToUse) readyToUse = !canBeSimlified(leftResult);
+
+                    readyToUse = !canBeSimlified(rightResult);
+                    while (!readyToUse) readyToUse = !canBeSimlified(rightResult);
+                }
+
                 if (leftResult.Count == 1
                     && rightResult.Count == 1
                     && Double.TryParse(leftResult[0], out Double leftValue)

@@ -7,16 +7,16 @@ namespace ArithmeticExpressions
     {
         static void Main(string[] args)
         {
-            //String exp = "(a * (10 + 5)) / ((2 + 2) * 3) + b * (3 + 5) + 2 * 2";
-            String exp = "(x + (10 + 10 / 10)) * 2";
-            var tokens = Parser.Parse(exp);
-            var cr = new ASTreeCreator(tokens);
-            cr.BuildASTree();
-            var calc = new ASTreeCalculator(cr.Root);
-            var tmp = calc.GetSimplifiedExpression();
-            foreach (var elem in calc.GetSimplifiedExpression())
+            //String expression = "ENTER_THE_EXPRESSION";
+            String expression = "(x + (10 + 10 / 10)) * 2";
+            var tokens = Parser.Parse(expression);
+            var asTreeCreator = new ASTreeCreator(tokens);
+            asTreeCreator.BuildASTree();
+            var asTreeCalculator = new ASTreeCalculator(asTreeCreator.Root);
+            var result = asTreeCalculator.GetSimplifiedExpression();
+            foreach (var elem in result)
             {
-                Console.Write(elem, " ");
+                Console.Write("{0} ", elem);
             }
         }
     }

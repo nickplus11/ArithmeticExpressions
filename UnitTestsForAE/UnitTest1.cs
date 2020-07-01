@@ -38,21 +38,18 @@ namespace UnitTestsForAE
         public void TestMethodCalculator1()
         {
             // Arrange
-            const string inputString = "(a * (10 + 5)) / ((2 + 2) * 3) + b * (3 + 5) + 2 * 2";
-            List<string> expected = new List<string>()
-            {
-                "a * 15 / 12 + b * 8 + 4"
-            };
+            const String inputString = "(a * (10 + 5)) / ((2 + 2) * 3) + b * (3 + 5) + 2 * 2";
+            var expected = "a * 15 / 12 + b * 8 + 4";
 
             // Act
             var cr = new ASTreeCreator(Parser.Parse(inputString));
             cr.BuildASTree();
             var root = cr.Root;
             var calculator = new ASTreeCalculator(root);
-            var actual = calculator.GetSimplifiedExpression();
+            var actual = calculator.GetSimplifiedExpressionInSingleString();
 
             //Assert
-            CollectionAssert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -60,20 +57,17 @@ namespace UnitTestsForAE
         {
             // Arrange
             const string inputString = "(x + (10 + 10 / 10)) * 2";
-            List<string> expected = new List<string>()
-            {
-                "(x + 11) * 2"
-            };
+            var expected = "( x + 11 ) * 2";
 
             // Act
             var cr = new ASTreeCreator(Parser.Parse(inputString));
             cr.BuildASTree();
             var root = cr.Root;
             var calculator = new ASTreeCalculator(root);
-            var actual = calculator.GetSimplifiedExpression();
+            var actual = calculator.GetSimplifiedExpressionInSingleString();
 
             // Assert
-            CollectionAssert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -81,20 +75,35 @@ namespace UnitTestsForAE
         {
             // Arrange
             const string inputString = "x - (10 + 25) / 5 + ( 1 + 2) * b - q * 2";
-            List<string> expected = new List<string>()
-            {
-                "x - 7 + 3 * b - q * 2"
-            };
+            var expected = "x - 7 + 3 * b - q * 2";
 
             // Act
             var cr = new ASTreeCreator(Parser.Parse(inputString));
             cr.BuildASTree();
             var root = cr.Root;
             var calculator = new ASTreeCalculator(root);
-            var actual = calculator.GetSimplifiedExpression();
+            var actual = calculator.GetSimplifiedExpressionInSingleString();
 
             // Assert
-            CollectionAssert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual);
+        }
+        
+        [TestMethod]
+        public void TestMethodCalculator4()
+        {
+            // Arrange
+            const String inputString = "Y * 10 * 2 / 4 * ( 1 + 2 + ( 3 + 3 ) + 1 ) - X";
+            var expected = "Y * 50 - X";
+
+            // Act
+            var cr = new ASTreeCreator(Parser.Parse(inputString));
+            cr.BuildASTree();
+            var root = cr.Root;
+            var calculator = new ASTreeCalculator(root);
+            var actual = calculator.GetSimplifiedExpressionInSingleString();
+
+            //Assert
+            Assert.AreEqual(expected, actual);
         }
     }
 
@@ -126,7 +135,7 @@ namespace UnitTestsForAE
         public void TestMethodCalculator2()
         {
             // Arrange
-            const string inputString = "(1 + 2 + 3) / 5 + 1 * 9";
+            const string inputString = "(1 + 2 + 3) / 5 + ( 1 * 9 )";
             List<string> expected = new List<string>()
             {
                 "10,2"

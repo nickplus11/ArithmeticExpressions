@@ -16,5 +16,20 @@ namespace ArithmeticExpressions
         {
             return Root.GetExpression();
         }
+        
+        public String GetSimplifiedExpressionInSingleString()
+        {
+            var result = Root.GetExpression();
+            String formatedResult = String.Empty;
+
+            foreach (var str in result)
+            {
+                formatedResult += str + " ";
+            }
+
+            formatedResult = formatedResult.Remove(formatedResult.Length-1);
+
+            return formatedResult;
+        }
     }
 }
