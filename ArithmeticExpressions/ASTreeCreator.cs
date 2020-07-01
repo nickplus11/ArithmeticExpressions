@@ -42,75 +42,46 @@ namespace ArithmeticExpressions
 
             while (index < tokens.Count)
             {
-                UInt16 stepIndex = index;
+
                 UInt16 openBrackets = 0;
                 if (tokens[index] == "(")
                 {
                     ++openBrackets;
-                    ++index;
-                    while (openBrackets > 0)
-                    {
-                        if (tokens[index] == "(") ++openBrackets;
-
-                        leftPart.Add(tokens[index]);
-                        ++index;
-                        if (index >= tokens.Count)
-                            throw new UnacceptableExpressionException("Absence of a closing bracket");
-                        if (tokens[index] == ")") --openBrackets;
-                    }
-
-                    ++index;
-                    if (index >= tokens.Count) break;
-
-                    if (!(tokens[index] == "+" || tokens[index] == "-"))
-                    {
-                        leftPart.Insert(stepIndex, "(");
-                        leftPart.Add(")");
-                        leftPart.Add(tokens[index]);
-                        ++index;
-                        continue;
-                    }
-                    else
-                    {
-                        switch (tokens[index])
-                        {
-                            case "+":
-                                operation = Operations.Add;
-                                break;
-                            case "-":
-                                operation = Operations.Subtract;
-                                break;
-                            default:
-                                throw new UnacceptableExpressionException("Not defined operation");
-                        }
-
-                        rightPart = tokens.GetRange(index + 1, tokens.Count - index - 1);
-                        break;
-                    }
-                }
-                else
-                {
-                    if (tokens[index] == "+" || tokens[index] == "-")
-                    {
-                        switch (tokens[index])
-                        {
-                            case "+":
-                                operation = Operations.Add;
-                                break;
-                            case "-":
-                                operation = Operations.Subtract;
-                                break;
-                            default:
-                                throw new UnacceptableExpressionException("Undefined operation");
-                        }
-
-                        rightPart = tokens.GetRange(index + 1, tokens.Count - index - 1);
-                        break;
-                    }
-
                     leftPart.Add(tokens[index]);
                     ++index;
+                    
+                    while (openBrackets > 0)
+                    {
+                        if(index >= tokens.Count) throw new UnacceptableExpressionException("Not closed brackets");
+                        if (tokens[index] == "(") ++openBrackets;
+                        if (tokens[index] == ")") --openBrackets;
+                        
+                        leftPart.Add(tokens[index]);
+                        ++index;
+                    }
+                    continue;
                 }
+
+                if (tokens[index] == "+" || tokens[index] == "-")
+                {
+                    switch (tokens[index])
+                    {
+                        case "+":
+                            operation = Operations.Add;
+                            break;
+                        case "-":
+                            operation = Operations.Subtract;
+                            break;
+                        default:
+                            throw new UnacceptableExpressionException("Undefined operation");
+                    }
+
+                    rightPart = tokens.GetRange(index + 1, tokens.Count - index - 1);
+                    break;
+                }
+
+                leftPart.Add(tokens[index]);
+                ++index;
             }
 
             if (rightPart.Count == 0)
@@ -232,7 +203,7 @@ namespace ArithmeticExpressions
         private void useGrammarNumber(List<String> tokens, ASTreeNode node)
         {
             if (tokens.Count > 1) throw new UnacceptableExpressionException("Expected a single token");
-            if (Int32.TryParse(tokens[0], out Int32 result))
+            if (Double.TryParse(tokens[0], out Double result))
             {
                 node.IsLeaf = true;
                 node.NumberValue = result;

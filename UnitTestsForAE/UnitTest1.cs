@@ -11,22 +11,23 @@ namespace UnitTestsForAE
     [TestClass]
     public class ParserTests
     {
-        [TestMethod] 
+        [TestMethod]
         public void TestMethodParser1()
         {
             // Arrange
             const string inputString = "(a * (10 + 5)) / ((2 + 2) * 3) + b * (3 + 5) + 2 * 2";
-            string[] expected = {
-                "(","a","*","(","10","+","5",")",")","/","(","(","2","+","2",")","*","3",")",
-                "+","b","*","(","3","+","5",")","+","2","*","2"
+            string[] expected =
+            {
+                "(", "a", "*", "(", "10", "+", "5", ")", ")", "/", "(", "(", "2", "+", "2", ")", "*", "3", ")",
+                "+", "b", "*", "(", "3", "+", "5", ")", "+", "2", "*", "2"
             };
+
             // Act
             List<string> actual = Parser.Parse(inputString);
-            // Assert
 
+            // Assert
             Assert.AreEqual(expected.Length, actual.Count);
             CollectionAssert.AreEqual(expected, actual.ToArray());
-
         }
     }
 
@@ -42,13 +43,18 @@ namespace UnitTestsForAE
             {
                 "a * 15 / 12 + b * 8 + 4"
             };
-            // Act
-            //var calculator = new Calculator(Parser.Parse(inputString));
-           // List<string> actual = calculator.Calculate();
-            // Assert
 
-            //CollectionAssert.AreEqual(expected, actual);
+            // Act
+            var cr = new ASTreeCreator(Parser.Parse(inputString));
+            cr.BuildASTree();
+            var root = cr.Root;
+            var calculator = new ASTreeCalculator(root);
+            var actual = calculator.GetSimplifiedExpression();
+
+            //Assert
+            CollectionAssert.AreEqual(expected, actual);
         }
+
         [TestMethod]
         public void TestMethodCalculator2()
         {
@@ -58,13 +64,18 @@ namespace UnitTestsForAE
             {
                 "(x + 11) * 2"
             };
-            // Act
-            //var calculator = new Calculator(Parser.Parse(inputString));
-            //List<string> actual = calculator.Calculate();
-            // Assert
 
-           // CollectionAssert.AreEqual(expected, actual);
+            // Act
+            var cr = new ASTreeCreator(Parser.Parse(inputString));
+            cr.BuildASTree();
+            var root = cr.Root;
+            var calculator = new ASTreeCalculator(root);
+            var actual = calculator.GetSimplifiedExpression();
+
+            // Assert
+            CollectionAssert.AreEqual(expected, actual);
         }
+
         [TestMethod]
         public void TestMethodCalculator3()
         {
@@ -74,12 +85,16 @@ namespace UnitTestsForAE
             {
                 "x - 7 + 3 * b - q * 2"
             };
-            // Act
-           // var calculator = new Calculator(Parser.Parse(inputString));
-           // List<string> actual = calculator.Calculate();
-            // Assert
 
-            //CollectionAssert.AreEqual(expected, actual);
+            // Act
+            var cr = new ASTreeCreator(Parser.Parse(inputString));
+            cr.BuildASTree();
+            var root = cr.Root;
+            var calculator = new ASTreeCalculator(root);
+            var actual = calculator.GetSimplifiedExpression();
+
+            // Assert
+            CollectionAssert.AreEqual(expected, actual);
         }
     }
 
@@ -95,13 +110,16 @@ namespace UnitTestsForAE
             {
                 "1,2"
             };
+
             // Act
-          // var calculator = new Calculator(Parser.Parse(inputString));
-           // List<string> actual = calculator.Calculate();
+            var cr = new ASTreeCreator(Parser.Parse(inputString));
+            cr.BuildASTree();
+            var root = cr.Root;
+            var calculator = new ASTreeCalculator(root);
+            var actual = calculator.GetSimplifiedExpression();
+
             // Assert
-
-           // CollectionAssert.AreEqual(expected, actual);
-
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -113,13 +131,16 @@ namespace UnitTestsForAE
             {
                 "10,2"
             };
+
             // Act
-           // var calculator = new Calculator(Parser.Parse(inputString));
-           // List<string> actual = calculator.Calculate();
+            var cr = new ASTreeCreator(Parser.Parse(inputString));
+            cr.BuildASTree();
+            var root = cr.Root;
+            var calculator = new ASTreeCalculator(root);
+            var actual = calculator.GetSimplifiedExpression();
+
             // Assert
-
-           // CollectionAssert.AreEqual(expected, actual);
-
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -131,13 +152,16 @@ namespace UnitTestsForAE
             {
                 "51"
             };
+
             // Act
-         //   var calculator = new Calculator(Parser.Parse(inputString));
-           // List<string> actual = calculator.Calculate();
+            var cr = new ASTreeCreator(Parser.Parse(inputString));
+            cr.BuildASTree();
+            var root = cr.Root;
+            var calculator = new ASTreeCalculator(root);
+            var actual = calculator.GetSimplifiedExpression();
+
             // Assert
-
-           // CollectionAssert.AreEqual(expected, actual);
-
+            CollectionAssert.AreEqual(expected, actual);
         }
     }
 }

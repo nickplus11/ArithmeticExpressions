@@ -22,7 +22,7 @@ namespace ArithmeticExpressions
             IsLeaf = isLeaf;
             IsVariable = containsVariable;
 
-            if (stringListValue.Count == 1 && Int32.TryParse(stringListValue[0], out Int32 result))
+            if (stringListValue.Count == 1 && Double.TryParse(stringListValue[0], out Double result))
             {
                 NumberValue = result;
             }
@@ -52,7 +52,7 @@ namespace ArithmeticExpressions
             while (!readyToUse) readyToUse = !canBeSimlified(result);
             return result;
         }
-        
+
         public List<String> Calculate()
         {
             if (LeftChild == null && RightChild == null)
@@ -172,24 +172,26 @@ namespace ArithmeticExpressions
                         default:
                             throw new UnacceptableExpressionException("Undefined operation");
                     }
+
                     finalResult.AddRange(rightResult);
                     finalResult.Add(")");
                     switch (Operation)
                     {
                         case Operations.Multiply:
                             finalResult.RemoveAt(0);
+                            finalResult.RemoveAt(finalResult.Count - 1);
                             break;
                         case Operations.Divide:
-                            finalResult.RemoveAt(finalResult.Count-1);
+                            finalResult.RemoveAt(0);
+                            finalResult.RemoveAt(finalResult.Count - 1);
                             break;
                     }
+
                     return finalResult;
                 }
             }
-
-            return null;
         }
-        
+
         private Boolean canBeSimlified(List<String> input)
         {
             if (input == null
@@ -205,7 +207,7 @@ namespace ArithmeticExpressions
             }
 
             input.RemoveAt(0);
-            input.RemoveAt(input.Count-1);
+            input.RemoveAt(input.Count - 1);
             return true;
         }
     }
